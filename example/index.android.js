@@ -14,8 +14,8 @@ import {
 import RNPush from 'react-native-push'
 
 export default class example extends Component {
-	componentDidMount() {
-		console.log(RNPush)
+	async componentDidMount() {
+    RNPush.initPush()
 	}
   render() {
     return (
