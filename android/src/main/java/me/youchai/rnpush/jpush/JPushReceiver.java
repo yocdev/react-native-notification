@@ -54,7 +54,7 @@ public class JPushReceiver extends BroadcastReceiver {
       WritableMap map = Arguments.createMap();
       map.putString("message", message);
       map.putString("extras", extras);
-      Logger.i(TAG, "收到自定义消息: " + message);
+      Logger.i("收到自定义消息: " + message);
       RNPushModule.sendEvent("receivePushMsg", map);
     } else if (JPushInterface.ACTION_NOTIFICATION_RECEIVED.equals(data.getAction())) {
       try {
@@ -62,10 +62,10 @@ public class JPushReceiver extends BroadcastReceiver {
         String alertContent = bundle.getString(JPushInterface.EXTRA_ALERT);
         // extra 字段的 json 字符串
         String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
-        Logger.i(TAG, "收到推送下来的通知: " + alertContent);
+        Logger.i("收到推送下来的通知: " + alertContent);
         //if (!isApplicationRunning(context)) {
           // HeadlessService 启动有问题，暂时弃用了
-          //                        Log.i(TAG, "应用尚未切换到前台运行过，启动 HeadlessService");
+          //                        Log.i("应用尚未切换到前台运行过，启动 HeadlessService");
           //                        Intent intent = new Intent(context, HeadlessService.class);
           //                        intent.putExtra("data", bundle);
           //                        context.startService(intent);
@@ -85,7 +85,7 @@ public class JPushReceiver extends BroadcastReceiver {
     } else if (JPushInterface.ACTION_NOTIFICATION_OPENED.equals(data.getAction())) {
       try {
         String registrationId = data.getExtras().getString(JPushInterface.EXTRA_REGISTRATION_ID);
-        Logger.d(TAG, "用户点击打开了通知");
+        Logger.d("用户点击打开了通知");
 
         // 通知内容
         String alertContent = bundle.getString(JPushInterface.EXTRA_ALERT);
@@ -117,14 +117,14 @@ public class JPushReceiver extends BroadcastReceiver {
         RNPushModule.sendEvent("openNotification", map);
       } catch (Exception e) {
         e.printStackTrace();
-        Logger.i(TAG, "Shouldn't access here");
+        Logger.i("Shouldn't access here");
       }
     // 应用注册完成后会发送广播，在 JS 中 RNPushModule.addGetRegistrationIdListener 接口可以第一时间得到 registrationId
     // After JPush finished registering, will send this broadcast, use RNPushModule.addGetRegistrationIdListener
     // to get registrationId in the first instance.
     } else if (JPushInterface.ACTION_REGISTRATION_ID.equals(data.getAction())) {
       String registrationId = data.getExtras().getString(JPushInterface.EXTRA_REGISTRATION_ID);
-      Logger.d(TAG, "注册成功, registrationId: " + registrationId);
+      Logger.d("注册成功, registrationId: " + registrationId);
       try {
         WritableMap map = Arguments.createMap();
         map.putString("registrationId", registrationId);

@@ -38,7 +38,7 @@ public class PushServiceFactory {
     PushService wantedService = null;
     String systemType = getSystemType();
 
-    Logger.i("xiaomi", "current type is " + systemType);
+    Logger.i("current type is " + systemType);
     for (Map.Entry<String, Class<? extends PushService>> entry : allServices.entrySet()) {
       try {
         Constructor<? extends PushService> c = entry.getValue().getConstructor(ReactApplicationContext.class);

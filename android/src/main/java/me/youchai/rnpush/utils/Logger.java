@@ -10,15 +10,15 @@ public class Logger {
   public static boolean SHUTDOWNLOG;
   public static boolean SHUTDOWNTOAST;
 
-  public static void i(String tag, String msg) {
+  public static void i(String msg) {
     if (!SHUTDOWNLOG) {
-      Log.i(tag, msg);
+      Log.i("RNPush", msg);
     }
   }
 
-  public static void d(String tag, String msg) {
+  public static void d(String msg) {
     if (!SHUTDOWNLOG) {
-      Log.d(tag, msg);
+      Log.d("RNPush", msg);
     }
   }
 

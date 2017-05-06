@@ -10,7 +10,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
-import com.facebook.react.modules.core.DeviceEventManagerModule;
+import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
 import me.youchai.rnpush.utils.Logger;
 
@@ -18,9 +18,11 @@ public class RNPushModule extends ReactContextBaseJavaModule {
 
   private static String TAG = "RNPushModule";
   private PushService pushService;
+  private static ReactApplicationContext __rac;
 
   public RNPushModule(ReactApplicationContext reactContext) {
     super(reactContext);
+    __rac = reactContext;
     this.pushService = PushServiceFactory.create(reactContext);
   }
 
@@ -35,25 +37,26 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   }
 
   public static void sendEvent(String key, WritableMap event) {
-    // send event to js
+    Logger.i("sending event");
+    __rac.getJSModule(RCTNativeAppEventEmitter.class).emit(key, event);
   }
 
   @ReactMethod
   public void initPush() {
     pushService.init();
-    Logger.i(TAG, "init Success!");
+    Logger.i("init Success!");
   }
 
   @ReactMethod
   public void stopPush() {
     pushService.stop();
-    Logger.i(TAG, "Stop push");
+    Logger.i("Stop push");
   }
 
   @ReactMethod
   public void resumePush() {
     pushService.resume();
-    Logger.i(TAG, "Resume push");
+    Logger.i("Resume push");
   }
 
   /**
