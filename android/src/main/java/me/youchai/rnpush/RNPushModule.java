@@ -42,22 +42,25 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void initPush() {
+  public void init() {
     pushService.init();
     Logger.i("init Success!");
   }
 
   @ReactMethod
-  public void stopPush() {
+  public void stop() {
     pushService.stop();
     Logger.i("Stop push");
   }
 
   @ReactMethod
-  public void resumePush() {
+  public void resume() {
     pushService.resume();
     Logger.i("Resume push");
   }
+
+  @ReactMethod
+	public void requestPermission() {}
 
   /**
    * Get registration id, different from RNPushModule.addGetRegistrationIdListener, this

@@ -18,11 +18,11 @@ export default class App extends React.Component {
   }
 
   async componentDidMount() {
-    RNPush.initPush()
+    RNPush.init()
 
     RNPush.getRegistrationId()
       .then((id) => {
-        if (id.length) {
+        if (id) {
           this.setState({
             registrationId: id,
           })
@@ -44,12 +44,17 @@ export default class App extends React.Component {
     await RNPush.clearAllNotifications()
   }
 
+	requestNotificationPermission = () => {
+		RNPush.requestPermission()
+	}
+
   render() {
     return (
       <View style={styles.container}>
         <Text>registrationId: {this.state.registrationId}</Text>
         <View>
-          <Button title="clearNotification" onPress={this.handleClearPress} />
+          <Button title="Clear All Notification" onPress={this.handleClearPress} />
+					<Button title="Request Permission" onPress={this.requestNotificationPermission} />
         </View>
       </View>
     )
