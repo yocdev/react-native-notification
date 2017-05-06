@@ -12,6 +12,12 @@ import com.xiaomi.mipush.sdk.MiPushCommandMessage;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.ErrorCode;
 
+import com.facebook.react.bridge.Arguments;
+import com.facebook.react.bridge.WritableMap;
+
+import me.youchai.rnpush.RNPushModule;
+import me.youchai.rnpush.utils.Logger;
+
 public class MiPushReceiver extends PushMessageReceiver {
   private String mRegId;
   private long mResultCode = -1;
@@ -63,8 +69,12 @@ public class MiPushReceiver extends PushMessageReceiver {
     String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);
     String cmdArg2 = ((arguments != null && arguments.size() > 1) ? arguments.get(1) : null);
     if (MiPushClient.COMMAND_REGISTER.equals(command)) {
+      String registrationId = cmdArg1;
       if (message.getResultCode() == ErrorCode.SUCCESS) {
-        mRegId = cmdArg1;
+        Logger.d("注册成功, registrationId: " + registrationId);
+        WritableMap map = Arguments.createMap();
+        map.putString("registrationId", registrationId);
+        RNPushModule.sendEvent("getRegistrationId", map);
       }
     } else if (MiPushClient.COMMAND_SET_ALIAS.equals(command)) {
       if (message.getResultCode() == ErrorCode.SUCCESS) {
@@ -95,9 +105,14 @@ public class MiPushReceiver extends PushMessageReceiver {
     List<String> arguments = message.getCommandArguments();
     String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);
     String cmdArg2 = ((arguments != null && arguments.size() > 1) ? arguments.get(1) : null);
+
+    String registrationId = cmdArg1;
     if (MiPushClient.COMMAND_REGISTER.equals(command)) {
       if (message.getResultCode() == ErrorCode.SUCCESS) {
-        mRegId = cmdArg1;
+        Logger.d("注册成功, registrationId: " + registrationId);
+        WritableMap map = Arguments.createMap();
+        map.putString("registrationId", registrationId);
+        RNPushModule.sendEvent("getRegistrationId", map);
       }
     }
   }
