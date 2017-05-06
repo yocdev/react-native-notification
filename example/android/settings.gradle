@@ -1,5 +1,5 @@
 rootProject.name = 'example'
-include ':react-native-push'
-project(':react-native-push').projectDir = new File(rootProject.projectDir, '../../android')
+include ':react-native-notification'
+project(':react-native-notification').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-notification/android')
 
 include ':app'

@@ -7,7 +7,7 @@ import {
   NativeAppEventEmitter,
 } from 'react-native'
 
-import RNPush from 'react-native-push'
+import RNPush from 'react-native-notification'
 
 export default class App extends React.Component {
   constructor() {

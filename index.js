@@ -1,6 +1,17 @@
 
-import { NativeModules } from 'react-native';
+import {
+  NativeModules,
+  Platform,
+  PushNotificationIOS,
+} from 'react-native'
 
-const { RNPush } = NativeModules;
+const { RNPush } = NativeModules
 
-export default RNPush;
+const RNPushIOS = {
+  getRegistrationId: () => {
+    return RNPush.getRegistrationId()
+  }
+}
+
+const M = Platform.OS === 'ios' ? RNPushIOS : RNPush
+export default M
