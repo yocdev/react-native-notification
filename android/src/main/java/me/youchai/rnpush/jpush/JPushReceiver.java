@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
-import me.youchai.rnpush.Logger;
+import me.youchai.rnpush.utils.Logger;
 import me.youchai.rnpush.RNPushModule;
 
 import com.facebook.react.HeadlessJsTaskService;

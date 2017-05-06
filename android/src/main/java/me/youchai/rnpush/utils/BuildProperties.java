@@ -5,7 +5,7 @@
  * Created by kela.king on 2015-10-20
  * Copyright (c) 2015 youchai.me. All rights reserved.
  */
-package me.youchai.rnpush;
+package me.youchai.rnpush.utils;
 
 import android.os.Environment;
 import java.io.File;

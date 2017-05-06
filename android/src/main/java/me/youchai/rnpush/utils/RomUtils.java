@@ -1,4 +1,4 @@
-package me.youchai.rnpush;
+package me.youchai.rnpush.utils;
 
 import android.os.Build;
 import java.io.IOException;

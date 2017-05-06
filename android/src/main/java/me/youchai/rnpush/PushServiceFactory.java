@@ -8,6 +8,8 @@ import java.lang.reflect.Constructor;
 
 import me.youchai.rnpush.jpush.JPushService;
 import me.youchai.rnpush.mipush.MiPushService;
+import me.youchai.rnpush.utils.Logger;
+import me.youchai.rnpush.utils.RomUtils;
 
 import com.facebook.react.bridge.ReactApplicationContext;
 

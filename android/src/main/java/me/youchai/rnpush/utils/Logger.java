@@ -1,5 +1,5 @@
 
-package me.youchai.rnpush;
+package me.youchai.rnpush.utils;
 
 import android.content.Context;
 import android.util.Log;
