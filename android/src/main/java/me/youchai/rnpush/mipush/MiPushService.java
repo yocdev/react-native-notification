@@ -1,48 +1,47 @@
 
-package me.youchai.rnpush.jpush;
+package me.youchai.rnpush.mipush;
 
 import android.content.Context;
-
 import com.facebook.react.bridge.ReactApplicationContext;
 
-import cn.jpush.android.api.JPushInterface;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import me.youchai.rnpush.PushService;
 
-public class JPushService implements PushService {
+public class MiPushService implements PushService {
   private ReactApplicationContext _rac;
 
-  public JPushService(ReactApplicationContext rac) {
+  public MiPushService(ReactApplicationContext rac) {
     this._rac = rac;
   }
 
   @Override
   public void init() {
-    JPushInterface.init(_rac);
+    MiPushClient.registerPush(_rac, "", "");
   }
 
   @Override
   public void stop() {
-    JPushInterface.stopPush(_rac);
+    MiPushClient.disablePush(_rac);
   }
 
   @Override
   public void resume() {
-    JPushInterface.resumePush(_rac);
+    MiPushClient.enablePush(_rac);
   }
 
   @Override
   public String getRegistrationID() {
-    return JPushInterface.getRegistrationID(_rac);
+    return MiPushClient.getRegId(_rac);
   }
 
   @Override
   public void clearAllNotification() throws Exception {
-    JPushInterface.clearAllNotifications(_rac);
+    MiPushClient.clearNotification(_rac);
   }
 
   @Override
   public void clearNotificationById(String id) throws Exception {
-    JPushInterface.clearNotificationById(_rac, Integer.parseInt(id));
+    MiPushClient.clearNotification(_rac, Integer.parseInt(id));
   }
 }

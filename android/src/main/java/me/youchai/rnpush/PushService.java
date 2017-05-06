@@ -10,5 +10,5 @@ public interface PushService {
 
   String getRegistrationID();
   void clearAllNotification() throws Exception;
-  void clearNotificationById(Context ctx, String id) throws Exception;
+  void clearNotificationById(String id) throws Exception;
 }

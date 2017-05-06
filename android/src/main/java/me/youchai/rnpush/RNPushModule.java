@@ -93,7 +93,7 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   // @ReactMethod
   public void clearNotificationById(String id, Promise promise) {
     try {
-      pushService.clearNotificationById(getCurrentActivity(), id);
+      pushService.clearNotificationById(id);
       promise.resolve(true);
     } catch (Exception e) {
       e.printStackTrace();
