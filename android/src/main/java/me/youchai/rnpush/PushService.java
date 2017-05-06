@@ -8,7 +8,7 @@ public interface PushService {
   void stop();
   void resume();
 
-  String getRegistrationID();
+  String getRegistrationId();
   void clearAllNotification() throws Exception;
   void clearNotificationById(String id) throws Exception;
 }

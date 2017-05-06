@@ -128,7 +128,7 @@ public class JPushReceiver extends BroadcastReceiver {
       try {
         WritableMap map = Arguments.createMap();
         map.putString("registrationId", registrationId);
-        RNPushModule.sendEvent("getRegistrationID", map);
+        RNPushModule.sendEvent("getRegistrationId", map);
       } catch (Exception e) {
         e.printStackTrace();
       }

@@ -66,9 +66,9 @@ public class RNPushModule extends ReactContextBaseJavaModule {
    * @param callback callback with registrationId
    */
   @ReactMethod
-  public void getRegistrationID(Promise promise) {
+  public void getRegistrationId(Promise promise) {
     try {
-      String id = pushService.getRegistrationID();
+      String id = pushService.getRegistrationId();
       promise.resolve(id);
     } catch (Exception e) {
       e.printStackTrace();

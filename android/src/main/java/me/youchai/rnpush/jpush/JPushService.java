@@ -32,7 +32,7 @@ public class JPushService implements PushService {
   }
 
   @Override
-  public String getRegistrationID() {
+  public String getRegistrationId() {
     return JPushInterface.getRegistrationID(_rac);
   }
 
