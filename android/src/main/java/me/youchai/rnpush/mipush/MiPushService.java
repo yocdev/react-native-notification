@@ -7,6 +7,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import me.youchai.rnpush.PushService;
+import me.youchai.rnpush.utils.Logger;
+import me.youchai.rnpush.R;
 
 public class MiPushService implements PushService {
   private ReactApplicationContext _rac;
@@ -17,7 +19,9 @@ public class MiPushService implements PushService {
 
   @Override
   public void init() {
-    MiPushClient.registerPush(_rac, "", "");
+    String appkey = _rac.getString(R.string.mipush_appkey);
+    String appid = _rac.getString(R.string.mipush_appid);
+    MiPushClient.registerPush(_rac, appid, appkey);
   }
 
   @Override

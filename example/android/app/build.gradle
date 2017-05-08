@@ -66,6 +66,7 @@ import com.android.build.OutputFile
  */
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -95,6 +96,13 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        resValue "string", "mipush_appid", project.env.get("MIPUSH_APPID")
+        resValue "string", "mipush_appkey", project.env.get("MIPUSH_APPKEY")
+        manifestPlaceholders = [
+          JPUSH_PKGNAME : applicationId,
+          JPUSH_APPKEY : project.env.get("JPUSH_APPKEY"), //JPush上注册的包名对应的appkey.
+          JPUSH_CHANNEL : "自定义渠道名称", //用户渠道统计的渠道名称
+        ]
     }
     splits {
         abi {
@@ -126,6 +134,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-config')
     compile project(':react-native-notification')
     compile fileTree(dir: "libs", include: ["*.jar"])
     compile "com.android.support:appcompat-v7:23.0.1"
