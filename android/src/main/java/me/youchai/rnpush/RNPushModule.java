@@ -59,9 +59,6 @@ public class RNPushModule extends ReactContextBaseJavaModule {
     Logger.i("Resume push");
   }
 
-  @ReactMethod
-	public void requestPermission() {}
-
   /**
    * Get registration id, different from RNPushModule.addGetRegistrationIdListener, this
    * method has no calling limits.
@@ -71,8 +68,10 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void getRegistrationId(Promise promise) {
     try {
-      String id = pushService.getRegistrationId();
-      promise.resolve(id);
+      WritableMap r = Arguments.createMap();
+      r.putString("type", pushService.getName());
+      r.putString("registrationId", pushService.getRegistrationId());
+      promise.resolve(r);
     } catch (Exception e) {
       e.printStackTrace();
       promise.reject(e.getMessage());

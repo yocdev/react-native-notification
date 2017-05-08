@@ -35,6 +35,11 @@ public class MiPushService implements PushService {
   }
 
   @Override
+  public String getName() {
+    return "MiPush";
+  }
+
+  @Override
   public String getRegistrationId() {
     return MiPushClient.getRegId(_rac);
   }

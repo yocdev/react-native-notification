@@ -21,18 +21,12 @@ export default class App extends React.Component {
     RNPush.init()
 
     RNPush.getRegistrationId()
-      .then((id) => {
-        if (id) {
-          this.setState({
-            registrationId: id,
-          })
-        }
+      .then((data) => {
+        this.setState(data)
       })
 
     NativeAppEventEmitter.addListener('getRegistrationId', (data) => {
-      this.setState({
-        registrationId: data.registrationId,
-      })
+      this.setState(data)
     })
 	}
 
@@ -44,17 +38,13 @@ export default class App extends React.Component {
     await RNPush.clearAllNotifications()
   }
 
-	requestNotificationPermission = () => {
-		RNPush.requestPermission()
-	}
-
   render() {
     return (
       <View style={styles.container}>
-				<Text selectable={true}>{this.state.registrationId}</Text>
+        <Text>{this.state.type || 'push service type'}</Text>
+				<Text selectable={true}>{this.state.registrationId || 'loading'}</Text>
         <View>
           <Button title="Clear All Notification" onPress={this.handleClearPress} />
-					<Button title="Request Permission" onPress={this.requestNotificationPermission} />
         </View>
       </View>
     )

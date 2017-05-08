@@ -13,22 +13,22 @@ let registrationIdIOS = ''
 PushNotificationIOS.addEventListener('register', (token) => {
 	registrationIdIOS = token
 	NativeAppEventEmitter.emit('getRegistrationId', {
+    type: 'ios',
 		registrationId: token,
 	})
 })
 
 const RNPushIOS = {
   getRegistrationId: () => {
-		if (!registrationIdIOS) {
-      PushNotificationIOS.requestPermissions()
-		}
-		return Promise.resolve(registrationIdIOS)
+		return Promise.resolve({
+      type: 'ios',
+      registrationId: registrationIdIOS,
+    })
   },
-	requestPermission: () => {
-		return PushNotificationIOS.requestPermissions()
-	},
-
-	init: () => {},
+	init: () => {
+    // have to call this to get fresh registrationId
+    PushNotificationIOS.requestPermissions()
+  },
 	stop: () => {},
 	resume: () => {},
 	clearAllNotifications: () => {

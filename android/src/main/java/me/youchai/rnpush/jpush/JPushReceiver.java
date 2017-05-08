@@ -127,6 +127,7 @@ public class JPushReceiver extends BroadcastReceiver {
       Logger.d("注册成功, registrationId: " + registrationId);
       try {
         WritableMap map = Arguments.createMap();
+        map.putString("type", "JPush");
         map.putString("registrationId", registrationId);
         RNPushModule.sendEvent("getRegistrationId", map);
       } catch (Exception e) {
