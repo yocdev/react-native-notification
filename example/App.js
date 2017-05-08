@@ -51,7 +51,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>registrationId: {this.state.registrationId}</Text>
+				<Text selectable={true}>{this.state.registrationId}</Text>
         <View>
           <Button title="Clear All Notification" onPress={this.handleClearPress} />
 					<Button title="Request Permission" onPress={this.requestNotificationPermission} />
