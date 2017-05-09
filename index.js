@@ -19,7 +19,7 @@ PushNotificationIOS.addEventListener('register', (token) => {
 })
 
 const RNPushIOS = {
-  getRegistrationInfo: () => {
+  getRegistrationId: () => {
 		return Promise.resolve({
       type: 'Apple',
       registrationId: registrationIdIOS,
