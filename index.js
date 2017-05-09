@@ -13,15 +13,15 @@ let registrationIdIOS = ''
 PushNotificationIOS.addEventListener('register', (token) => {
 	registrationIdIOS = token
 	NativeAppEventEmitter.emit('getRegistrationId', {
-    type: 'ios',
+    type: 'Apple',
 		registrationId: token,
 	})
 })
 
 const RNPushIOS = {
-  getRegistrationId: () => {
+  getRegistrationInfo: () => {
 		return Promise.resolve({
-      type: 'ios',
+      type: 'Apple',
       registrationId: registrationIdIOS,
     })
   },
