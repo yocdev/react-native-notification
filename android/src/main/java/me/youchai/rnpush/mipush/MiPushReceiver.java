@@ -112,6 +112,7 @@ public class MiPushReceiver extends PushMessageReceiver {
       if (message.getResultCode() == ErrorCode.SUCCESS) {
         Logger.d("注册成功, registrationId: " + registrationId);
         WritableMap map = Arguments.createMap();
+        map.putString("type", "MiPush");
         map.putString("registrationId", registrationId);
         RNPushModule.sendEvent("getRegistrationId", map);
       }
