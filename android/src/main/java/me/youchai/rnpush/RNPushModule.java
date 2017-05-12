@@ -59,6 +59,12 @@ public class RNPushModule extends ReactContextBaseJavaModule {
     Logger.i("Resume push");
   }
 
+  @ReactMethod
+  public void clearBadge() {
+    Logger.i("clear badge");
+    // not working on android
+  }
+
   /**
    * Get registration id, different from RNPushModule.addGetRegistrationIdListener, this
    * method has no calling limits.

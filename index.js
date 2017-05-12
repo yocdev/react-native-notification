@@ -25,6 +25,9 @@ const RNPushIOS = {
       registrationId: registrationIdIOS,
     })
   },
+  clearBadge: () => {
+    PushNotificationIOS.setApplicationIconBadgeNumber(0)
+  },
 	init: () => {
     // have to call this to get fresh registrationId
     PushNotificationIOS.requestPermissions()
