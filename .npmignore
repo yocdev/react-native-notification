@@ -45,4 +45,4 @@ buck-out/
 *.keystore
 .tern-port
 
-example
+example/
