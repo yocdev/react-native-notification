@@ -12,6 +12,8 @@ import me.youchai.rnpush.utils.Logger;
 import me.youchai.rnpush.utils.RomUtils;
 
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableArray;
 
 public class PushServiceFactory {
   private static final String XIAOMI = "xiaomi";
@@ -34,9 +36,27 @@ public class PushServiceFactory {
     return OTHER;
   }
 
-  public static PushService create(ReactApplicationContext rac) {
+  private static boolean isEnabled(ReadableArray enabled, String type) {
+    for (int i = 0; i < enabled.size(); i++) {
+      Logger.i(enabled.getString(i));
+      if (type == enabled.getString(i)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public static PushService create(ReactApplicationContext rac, ReadableMap config) {
     PushService wantedService = null;
-    String systemType = getSystemType();
+
+    String systemType = OTHER;
+    // check if systemType is enabled
+    if (config != null && config.hasKey("enabled")) {
+      systemType = getSystemType();
+      if (!isEnabled(config.getArray("enabled"), systemType)) {
+        systemType = OTHER;
+      }
+    }
 
     Logger.i("current type is " + systemType);
     for (Map.Entry<String, Class<? extends PushService>> entry : allServices.entrySet()) {

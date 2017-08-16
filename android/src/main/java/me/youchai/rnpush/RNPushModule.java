@@ -10,6 +10,8 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
 import me.youchai.rnpush.utils.Logger;
@@ -17,13 +19,12 @@ import me.youchai.rnpush.utils.Logger;
 public class RNPushModule extends ReactContextBaseJavaModule {
 
   private static String TAG = "RNPushModule";
-  private PushService pushService;
+  private PushService pushService = null;
   private static ReactApplicationContext __rac;
 
   public RNPushModule(ReactApplicationContext reactContext) {
     super(reactContext);
     __rac = reactContext;
-    this.pushService = PushServiceFactory.create(reactContext);
   }
 
   @Override
@@ -42,19 +43,30 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void init() {
-    pushService.init();
+  public void init(ReadableMap configs) {
+    ReadableMap config = null;
+    if (configs != null && configs.hasKey("android")) {
+      config = configs.getMap("android");
+    }
+    this.pushService = PushServiceFactory.create(__rac, config);
+    this.pushService.init();
     Logger.i("init Success!");
   }
 
   @ReactMethod
   public void stop() {
+    if (pushService == null) {
+      return;
+    }
     pushService.stop();
     Logger.i("Stop push");
   }
 
   @ReactMethod
   public void resume() {
+    if (pushService == null) {
+      return;
+    }
     pushService.resume();
     Logger.i("Resume push");
   }
@@ -73,6 +85,9 @@ public class RNPushModule extends ReactContextBaseJavaModule {
    */
   @ReactMethod
   public void getRegistrationId(Promise promise) {
+    if (pushService == null) {
+      promise.reject("pushService not initialized");
+    }
     try {
       WritableMap r = Arguments.createMap();
       r.putString("type", pushService.getName());
@@ -89,6 +104,10 @@ public class RNPushModule extends ReactContextBaseJavaModule {
    */
   @ReactMethod
   public void clearAllNotifications(Promise promise) {
+    if (pushService == null) {
+      promise.reject("pushService not initialized");
+      return;
+    }
     try {
       pushService.clearAllNotification();
       promise.resolve(true);
@@ -105,6 +124,10 @@ public class RNPushModule extends ReactContextBaseJavaModule {
    */
   // @ReactMethod
   public void clearNotificationById(String id, Promise promise) {
+    if (pushService == null) {
+      promise.reject("pushService not initialized");
+      return;
+    }
     try {
       pushService.clearNotificationById(id);
       promise.resolve(true);
