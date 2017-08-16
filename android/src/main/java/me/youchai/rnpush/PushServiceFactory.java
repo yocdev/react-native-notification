@@ -51,7 +51,7 @@ public class PushServiceFactory {
 
     String systemType = OTHER;
     // check if systemType is enabled
-    if (config.hasKey("enabled")) {
+    if (config != null && config.hasKey("enabled")) {
       systemType = getSystemType();
       if (!isEnabled(config.getArray("enabled"), systemType)) {
         systemType = OTHER;

@@ -45,7 +45,7 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void init(ReadableMap configs) {
     ReadableMap config = null;
-    if (configs.hasKey("android")) {
+    if (configs != null && configs.hasKey("android")) {
       config = configs.getMap("android");
     }
     this.pushService = PushServiceFactory.create(__rac, config);
