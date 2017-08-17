@@ -16,7 +16,6 @@ public class RNPushPackage implements ReactPackage {
     return Arrays.<NativeModule>asList(new RNPushModule(reactContext));
   }
 
-  @Override
   public List<Class<? extends JavaScriptModule>> createJSModules() {
     return Collections.emptyList();
   }
