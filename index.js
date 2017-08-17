@@ -30,7 +30,7 @@ const RNPushIOS = {
   },
 	init: () => {
     // have to call this to get fresh registrationId
-    PushNotificationIOS.requestPermissions()
+    // PushNotificationIOS.requestPermissions()
   },
 	stop: () => {},
 	resume: () => {},
