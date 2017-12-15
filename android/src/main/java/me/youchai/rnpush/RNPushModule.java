@@ -38,8 +38,13 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   }
 
   public static void sendEvent(String key, WritableMap event) {
-    Logger.i("sending event");
-    __rac.getJSModule(RCTNativeAppEventEmitter.class).emit(key, event);
+    if (__rac != null) {
+      RCTNativeAppEventEmitter emitter =
+        __rac.getJSModule(RCTNativeAppEventEmitter.class);
+      if (emitter != null) {
+        emitter.emit(key, event);
+      }
+    }
   }
 
   @ReactMethod

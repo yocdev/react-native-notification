@@ -1,46 +1,26 @@
+import { Platform } from 'react-native'
 
-import {
-  NativeModules,
-  Platform,
-  PushNotificationIOS,
-	NativeAppEventEmitter,
-} from 'react-native'
+import RNPushAndroid from './android'
+import RNPushIOS from './ios'
 
-const { RNPush } = NativeModules
+const EVENTS = [
+  'notification',
+  'openNotification',
+  'localNotification',
+  'register',
+  'registrationError',
+]
 
-let registrationIdIOS = ''
+const platPush = Platform.OS === 'ios' ? RNPushIOS : RNPushAndroid
 
-PushNotificationIOS.addEventListener('register', (token) => {
-	registrationIdIOS = token
-	NativeAppEventEmitter.emit('getRegistrationId', {
-    type: 'Apple',
-		registrationId: token,
-	})
-})
-
-const RNPushIOS = {
-  getRegistrationId: () => {
-		return Promise.resolve({
-      type: 'Apple',
-      registrationId: registrationIdIOS,
-    })
-  },
-  clearBadge: () => {
-    PushNotificationIOS.setApplicationIconBadgeNumber(0)
-  },
-	init: () => {
-    // have to call this to get fresh registrationId
-    // PushNotificationIOS.requestPermissions()
-  },
-	stop: () => {},
-	resume: () => {},
-	clearAllNotifications: () => {
-		PushNotificationIOS.removeAllDeliveredNotifications()
-	},
-	clearNotificationById: (id) => {
-		PushNotificationIOS.removeDeliveredNotifications(id)
-	}
+const RNPush = {
+  ...platPush,
+  addEventListener: function (event, listener) {
+    if (!EVENTS.includes(event)) {
+      throw 'event not support'
+    }
+    platPush.addEventListener(event, listener)
+  }
 }
 
-const M = Platform.OS === 'ios' ? RNPushIOS : RNPush
-export default M
+export default RNPush

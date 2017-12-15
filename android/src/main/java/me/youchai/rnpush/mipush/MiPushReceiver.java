@@ -75,7 +75,7 @@ public class MiPushReceiver extends PushMessageReceiver {
         WritableMap map = Arguments.createMap();
         map.putString("type", "MiPush");
         map.putString("registrationId", registrationId);
-        RNPushModule.sendEvent("getRegistrationId", map);
+        RNPushModule.sendEvent("register", map);
       }
     } else if (MiPushClient.COMMAND_SET_ALIAS.equals(command)) {
       if (message.getResultCode() == ErrorCode.SUCCESS) {
@@ -114,7 +114,7 @@ public class MiPushReceiver extends PushMessageReceiver {
         WritableMap map = Arguments.createMap();
         map.putString("type", "MiPush");
         map.putString("registrationId", registrationId);
-        RNPushModule.sendEvent("getRegistrationId", map);
+        RNPushModule.sendEvent("register", map);
       }
     }
   }
