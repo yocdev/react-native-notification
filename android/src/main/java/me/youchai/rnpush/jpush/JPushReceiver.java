@@ -90,11 +90,12 @@ public class JPushReceiver extends BroadcastReceiver {
           Logger.i("openning url: " + url);
           intent.setAction(Intent.ACTION_VIEW);
           intent.setData(Uri.parse(url));
+          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
           context.startActivity(intent);
         } else {
           intent.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
           intent.putExtras(bundle);
-          // intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
           context.startActivity(intent);
           WritableMap map = Arguments.createMap();
           map.putString("title", title);
