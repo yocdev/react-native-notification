@@ -1,18 +1,17 @@
-
 package me.youchai.rnpush;
 
-import android.content.Context;
+import android.support.annotation.RequiresPermission;
 
 import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.Callback;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
-import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.ReadableArray;
+import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
+
+import java.util.Collections;
 
 import me.youchai.rnpush.utils.Logger;
 
@@ -35,6 +34,29 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   @Override
   public String getName() {
     return "RNPush";
+  }
+
+  public static void onRegister(String type, String registrationId) {
+    WritableMap map = Arguments.createMap();
+    map.putString("type", type);
+    map.putString("registrationId", registrationId);
+
+    RNPushModule.sendEvent("register", map);
+  }
+
+  public static void onRegisterError(String message) {
+    WritableMap map = Arguments.createMap();
+    map.putString("message", message);
+
+    RNPushModule.sendEvent("registrationError", map);
+  }
+
+  public static void onNotification(Notification note) {
+    RNPushModule.sendEvent("notification", note.toWritableMap());
+  }
+
+  public static void onNotificationClick(Notification note) {
+    PushService.setInitialNotification(note);
   }
 
   public static void sendEvent(String key, WritableMap event) {
@@ -77,21 +99,9 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void clearBadge() {
-    Logger.i("clear badge");
-    // not working on android
-  }
-
-  /**
-   * Get registration id, different from RNPushModule.addGetRegistrationIdListener, this
-   * method has no calling limits.
-   *
-   * @param callback callback with registrationId
-   */
-  @ReactMethod
   public void getRegistrationId(Promise promise) {
     if (pushService == null) {
-      promise.reject("pushService not initialized");
+      promise.reject(TAG,"pushService not initialized");
     }
     try {
       WritableMap r = Arguments.createMap();
@@ -100,46 +110,104 @@ public class RNPushModule extends ReactContextBaseJavaModule {
       promise.resolve(r);
     } catch (Exception e) {
       e.printStackTrace();
-      promise.reject(e.getMessage());
+      promise.reject(e);
     }
   }
 
-  /**
-   * Clear all notifications, suggest invoke this method while exiting app.
-   */
   @ReactMethod
-  public void clearAllNotifications(Promise promise) {
-    if (pushService == null) {
-      promise.reject("pushService not initialized");
-      return;
-    }
-    try {
-      pushService.clearAllNotification();
-      promise.resolve(true);
-    } catch (Exception e) {
-      e.printStackTrace();
-      promise.reject(e.getMessage());
+  public void getInitialNotification(Promise promise) {
+    Notification note = PushService.getInitialNotification();
+    if (note != null) {
+      promise.resolve(note.toWritableMap());
+      PushService.setInitialNotification(null);
+    } else {
+      promise.resolve(null);
     }
   }
 
-  /**
-   * Clear specified notification
-   *
-   * @param id the notification id
-   */
-  // @ReactMethod
-  public void clearNotificationById(String id, Promise promise) {
+  @ReactMethod
+  public void scheduleLocalNotification(ReadableMap args, Promise promise) {
     if (pushService == null) {
-      promise.reject("pushService not initialized");
-      return;
+      promise.reject(TAG,"pushService not initialized");
     }
+    Notification note = new Notification();
+    if (args.hasKey("title")) {
+      note.setTitle(args.getString("title"));
+    }
+    if (args.hasKey("content")) {
+      note.setContent(args.getString("content"));
+    }
+    if (args.hasKey("extras")) {
+      note.setExtras(args.getString("extras"));
+    }
+    if (args.hasKey("fireDate")) {
+      note.setFireDate((long) args.getDouble("fireDate"));
+    }
+    Logger.i(args.toString());
     try {
-      pushService.clearNotificationById(id);
-      promise.resolve(true);
-    } catch (Exception e) {
-      e.printStackTrace();
-      promise.reject(e.getMessage());
+      pushService.scheduleLocalNotification(note);
+      promise.resolve(null);
+    } catch (Throwable e) {
+      Logger.i(e.getMessage());
+      promise.reject(e);
     }
   }
 
+  @ReactMethod
+  public void cancelLocalNotifications(String id, Promise promise) {
+    if (pushService == null) {
+      promise.reject(TAG,"pushService not initialized");
+    }
+    try {
+      pushService.cancelLocalNotifications(Collections.singletonList(id));
+      promise.resolve(null);
+    } catch (Throwable e) {
+      Logger.i(e.getMessage());
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void cancelAllLocalNotifications(Promise promise) {
+    if (pushService == null) {
+      promise.reject(TAG,"pushService not initialized");
+    }
+    try {
+      pushService.cancelAllLocalNotifications();
+      promise.resolve(null);
+    } catch (Throwable e) {
+      Logger.i(e.getMessage());
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void removeAllNotifications(Promise promise) {
+    if (pushService == null) {
+      promise.reject(TAG, "pushService not initialized");
+      return;
+    }
+    try {
+      pushService.removeAllNotifications();
+      promise.resolve(true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void removeNotifications(String id, Promise promise) {
+    if (pushService == null) {
+      promise.reject(TAG, "pushService not initialized");
+      return;
+    }
+    try {
+      pushService.removeNotifications(Collections.singletonList(id));
+      promise.resolve(true);
+    } catch (Exception e) {
+      e.printStackTrace();
+      promise.reject(e);
+    }
+  }
 }

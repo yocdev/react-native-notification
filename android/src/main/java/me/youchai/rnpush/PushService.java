@@ -1,15 +1,29 @@
-
 package me.youchai.rnpush;
 
-import android.content.Context;
+import java.util.List;
 
-public interface PushService {
-  void init();
-  void stop();
-  void resume();
+public abstract class PushService {
+  private static Notification initialNotification;
 
-  String getName();
-  String getRegistrationId();
-  void clearAllNotification() throws Exception;
-  void clearNotificationById(String id) throws Exception;
+
+  public abstract void init();
+  public abstract void stop();
+  public abstract void resume();
+
+  public abstract String getName();
+  public abstract String getRegistrationId();
+
+  public abstract void removeNotifications(List<String> ids) throws Exception;
+  public abstract void removeAllNotifications() throws Exception;
+
+  public abstract void scheduleLocalNotification(Notification notification);
+  public abstract void cancelLocalNotifications(List<String> ids);
+  public abstract void cancelAllLocalNotifications();
+
+  static void setInitialNotification(Notification notification) {
+    initialNotification = notification;
+  }
+  static Notification getInitialNotification() {
+    return initialNotification;
+  }
 }

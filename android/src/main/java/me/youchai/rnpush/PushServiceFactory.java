@@ -15,7 +15,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.ReadableArray;
 
-public class PushServiceFactory {
+class PushServiceFactory {
   private static final String XIAOMI = "xiaomi";
   private static final String HUAWEI = "huawei";
   private static final String OTHER = "default";
@@ -46,7 +46,7 @@ public class PushServiceFactory {
     return false;
   }
 
-  public static PushService create(ReactApplicationContext rac, ReadableMap config) {
+  static PushService create(ReactApplicationContext rac, ReadableMap config) {
     PushService wantedService = null;
 
     String systemType = OTHER;
