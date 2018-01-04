@@ -70,14 +70,20 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void init(ReadableMap configs) {
+  public void init(ReadableMap configs, Promise promise) {
     ReadableMap config = null;
     if (configs != null && configs.hasKey("android")) {
       config = configs.getMap("android");
     }
-    this.pushService = PushServiceFactory.create(__rac, config);
-    this.pushService.init();
-    Logger.i("init Success!");
+    try {
+      this.pushService = PushServiceFactory.create(__rac, config);
+      this.pushService.init();
+      Logger.i("init Success!");
+      promise.resolve(null);
+    } catch (Throwable e) {
+      Logger.i("error when init push service" + e.getMessage());
+      promise.reject(e);
+    }
   }
 
   @ReactMethod

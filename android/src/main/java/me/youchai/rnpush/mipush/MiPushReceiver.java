@@ -2,8 +2,10 @@
 package me.youchai.rnpush.mipush;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.xiaomi.mipush.sdk.PushMessageReceiver;
@@ -15,106 +17,82 @@ import com.xiaomi.mipush.sdk.ErrorCode;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 
+import org.json.JSONObject;
+
+import me.youchai.rnpush.Notification;
 import me.youchai.rnpush.RNPushModule;
 import me.youchai.rnpush.utils.Logger;
 
 public class MiPushReceiver extends PushMessageReceiver {
-  private String mRegId;
-  private long mResultCode = -1;
-  private String mReason;
-  private String mCommand;
-  private String mMessage;
-  private String mTopic;
-  private String mAlias;
-  private String mUserAccount;
-  private String mStartTime;
-  private String mEndTime;
+
   @Override
   public void onReceivePassThroughMessage(Context context, MiPushMessage message) {
-    mMessage = message.getContent();
-    if(!TextUtils.isEmpty(message.getTopic())) {
-      mTopic=message.getTopic();
-    } else if(!TextUtils.isEmpty(message.getAlias())) {
-      mAlias=message.getAlias();
-    } else if(!TextUtils.isEmpty(message.getUserAccount())) {
-      mUserAccount=message.getUserAccount();
-    }
+    String id = String.valueOf(message.getNotifyId());
+    String title = message.getTitle();
+    String content = message.getDescription();
+    Map<String, String> extrasMap = message.getExtra();
+    String extras = new JSONObject(extrasMap).toString();
+
+    RNPushModule.onNotification(new Notification(
+        id, title, content, extras
+    ));
   }
   @Override
   public void onNotificationMessageClicked(Context context, MiPushMessage message) {
-    mMessage = message.getContent();
-    if(!TextUtils.isEmpty(message.getTopic())) {
-      mTopic=message.getTopic();
-    } else if(!TextUtils.isEmpty(message.getAlias())) {
-      mAlias=message.getAlias();
-    } else if(!TextUtils.isEmpty(message.getUserAccount())) {
-      mUserAccount=message.getUserAccount();
-    }
+    String id = String.valueOf(message.getNotifyId());
+    String title = message.getTitle();
+    String content = message.getDescription();
+    Map<String, String> extrasMap = message.getExtra();
+    String extras = new JSONObject(extrasMap).toString();
+    Logger.i(message.toString());
+
+    // start MainActivity
+    Intent intent = new Intent();
+    intent.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    context.startActivity(intent);
+
+    RNPushModule.onNotificationClick(new Notification(
+        id, title, content, extras
+    ));
   }
   @Override
   public void onNotificationMessageArrived(Context context, MiPushMessage message) {
-    mMessage = message.getContent();
-    if(!TextUtils.isEmpty(message.getTopic())) {
-      mTopic=message.getTopic();
-    } else if(!TextUtils.isEmpty(message.getAlias())) {
-      mAlias=message.getAlias();
-    } else if(!TextUtils.isEmpty(message.getUserAccount())) {
-      mUserAccount=message.getUserAccount();
-    }
+    String id = String.valueOf(message.getNotifyId());
+    String title = message.getTitle();
+    String content = message.getDescription();
+    Map<String, String> extrasMap = message.getExtra();
+    String extras = new JSONObject(extrasMap).toString();
+
+    RNPushModule.onNotification(new Notification(
+        id, title, content, extras
+    ));
   }
+
   @Override
   public void onCommandResult(Context context, MiPushCommandMessage message) {
     String command = message.getCommand();
     List<String> arguments = message.getCommandArguments();
     String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);
-    String cmdArg2 = ((arguments != null && arguments.size() > 1) ? arguments.get(1) : null);
     if (MiPushClient.COMMAND_REGISTER.equals(command)) {
-      String registrationId = cmdArg1;
       if (message.getResultCode() == ErrorCode.SUCCESS) {
-        Logger.d("注册成功, registrationId: " + registrationId);
-        WritableMap map = Arguments.createMap();
-        map.putString("type", "MiPush");
-        map.putString("registrationId", registrationId);
-        RNPushModule.sendEvent("register", map);
-      }
-    } else if (MiPushClient.COMMAND_SET_ALIAS.equals(command)) {
-      if (message.getResultCode() == ErrorCode.SUCCESS) {
-        mAlias = cmdArg1;
-      }
-    } else if (MiPushClient.COMMAND_UNSET_ALIAS.equals(command)) {
-      if (message.getResultCode() == ErrorCode.SUCCESS) {
-        mAlias = cmdArg1;
-      }
-    } else if (MiPushClient.COMMAND_SUBSCRIBE_TOPIC.equals(command)) {
-      if (message.getResultCode() == ErrorCode.SUCCESS) {
-        mTopic = cmdArg1;
-      }
-    } else if (MiPushClient.COMMAND_UNSUBSCRIBE_TOPIC.equals(command)) {
-      if (message.getResultCode() == ErrorCode.SUCCESS) {
-        mTopic = cmdArg1;
-      }
-    } else if (MiPushClient.COMMAND_SET_ACCEPT_TIME.equals(command)) {
-      if (message.getResultCode() == ErrorCode.SUCCESS) {
-        mStartTime = cmdArg1;
-        mEndTime = cmdArg2;
+        Logger.d("注册成功, registrationId: " + cmdArg1);
+        RNPushModule.onRegister("MiPush", cmdArg1);
       }
     }
   }
+
   @Override
   public void onReceiveRegisterResult(Context context, MiPushCommandMessage message) {
     String command = message.getCommand();
     List<String> arguments = message.getCommandArguments();
     String cmdArg1 = ((arguments != null && arguments.size() > 0) ? arguments.get(0) : null);
-    String cmdArg2 = ((arguments != null && arguments.size() > 1) ? arguments.get(1) : null);
 
-    String registrationId = cmdArg1;
+    Logger.i(message.toString());
     if (MiPushClient.COMMAND_REGISTER.equals(command)) {
       if (message.getResultCode() == ErrorCode.SUCCESS) {
-        Logger.d("注册成功, registrationId: " + registrationId);
-        WritableMap map = Arguments.createMap();
-        map.putString("type", "MiPush");
-        map.putString("registrationId", registrationId);
-        RNPushModule.sendEvent("register", map);
+        Logger.d("注册成功, registrationId: " + cmdArg1);
+        RNPushModule.onRegister("MiPush", cmdArg1);
       }
     }
   }

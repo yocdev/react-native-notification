@@ -6,11 +6,14 @@ import com.facebook.react.bridge.ReactApplicationContext;
 
 import com.xiaomi.mipush.sdk.MiPushClient;
 
+import java.util.List;
+
+import me.youchai.rnpush.Notification;
 import me.youchai.rnpush.PushService;
 import me.youchai.rnpush.utils.Logger;
 import me.youchai.rnpush.R;
 
-public class MiPushService implements PushService {
+public class MiPushService extends PushService {
   private ReactApplicationContext _rac;
 
   public MiPushService(ReactApplicationContext rac) {
@@ -21,7 +24,7 @@ public class MiPushService implements PushService {
   public void init() {
     String appkey = _rac.getString(R.string.mipush_appkey);
     String appid = _rac.getString(R.string.mipush_appid);
-    MiPushClient.registerPush(_rac, appid, appkey);
+    MiPushClient.registerPush(_rac, "2882303761517689572", "5861768911572");
   }
 
   @Override
@@ -45,12 +48,29 @@ public class MiPushService implements PushService {
   }
 
   @Override
-  public void clearAllNotification() throws Exception {
+  public void removeNotifications(List<String> ids) throws Exception {
+    for (String id : ids) {
+      MiPushClient.clearNotification(_rac, Integer.parseInt(id));
+    }
+  }
+
+  @Override
+  public void removeAllNotifications() throws Exception {
     MiPushClient.clearNotification(_rac);
   }
 
   @Override
-  public void clearNotificationById(String id) throws Exception {
-    MiPushClient.clearNotification(_rac, Integer.parseInt(id));
+  public void scheduleLocalNotification(Notification notification) {
+    Logger.i("not supported");
+  }
+
+  @Override
+  public void cancelLocalNotifications(List<String> ids) {
+    Logger.i("not supported");
+  }
+
+  @Override
+  public void cancelAllLocalNotifications() {
+    Logger.i("not supported");
   }
 }
