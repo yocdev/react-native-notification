@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import me.youchai.rnpush.huawei.HuaweiPushService;
 import me.youchai.rnpush.jpush.JPushService;
 import me.youchai.rnpush.mipush.MiPushService;
 import me.youchai.rnpush.utils.Logger;
@@ -20,15 +21,15 @@ class PushServiceFactory {
   private static final String JPUSH = "JPush";
 
   private static final Map<String, Class<? extends PushService>> allServices =
-    Collections.unmodifiableMap(new HashMap() {{
-      put(MIPUSH, MiPushService.class);
-      put(JPUSH, JPushService.class);
-    }});
+      Collections.unmodifiableMap(new HashMap() {{
+        put(MIPUSH, MiPushService.class);
+        put(JPUSH, JPushService.class);
+        put(HUAWEI, HuaweiPushService.class);
+      }});
 
   private static String getSystemType() {
     if (RomUtils.isEmui()) {
-      // TODO add huawei
-      return JPUSH;
+      return HUAWEI;
     } else if (RomUtils.isMiui()) {
       return MIPUSH;
     }
@@ -36,14 +37,14 @@ class PushServiceFactory {
   }
 
   static PushService create(ReactApplicationContext rac, ReadableMap config) throws Exception {
-    String systemType = JPUSH;
+    String systemType = getSystemType();
     if (config != null && config.hasKey("type")) {
       systemType = config.getString("type");
     }
 
     Logger.i("current type is " + systemType);
     Class<? extends PushService> serviceClass = allServices.get(systemType);
-    Constructor<? extends  PushService> c =
+    Constructor<? extends PushService> c =
         serviceClass.getConstructor(ReactApplicationContext.class);
     return c.newInstance(rac);
   }
