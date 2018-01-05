@@ -24,7 +24,7 @@ public class MiPushService extends PushService {
   public void init() {
     String appkey = _rac.getString(R.string.mipush_appkey);
     String appid = _rac.getString(R.string.mipush_appid);
-    MiPushClient.registerPush(_rac, "2882303761517689572", "5861768911572");
+    MiPushClient.registerPush(_rac, appkey, appid);
   }
 
   @Override
