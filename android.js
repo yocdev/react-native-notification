@@ -15,6 +15,10 @@ const RNPushAndroid = {
   removeEventListener: function(event, listener) {
     return NativeAppEventEmitter.removeListener(event, listener)
   },
+  getNotifications: () => {},
+  setBadgeNumber: () => {},
+  getBadgeNumber: () => 0,
+  clearBadge: () => {},
 }
 
 export default RNPushAndroid

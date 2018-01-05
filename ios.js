@@ -39,10 +39,10 @@ const RNPush = {
   },
 	stop: () => {},
 	resume: () => {},
-	clearAllNotifications: () => {
+	removeAllNotifications: () => {
 		PushNotificationIOS.removeAllDeliveredNotifications()
 	},
-	clearNotificationById: (id) => {
+	removeNotifications: (id) => {
 		PushNotificationIOS.removeDeliveredNotifications(id)
 	}
 }
