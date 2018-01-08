@@ -2,6 +2,11 @@
 package me.youchai.rnpush.mipush;
 
 import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.util.Log;
+
 import com.facebook.react.bridge.ReactApplicationContext;
 
 import com.xiaomi.mipush.sdk.MiPushClient;
@@ -11,7 +16,6 @@ import java.util.List;
 import me.youchai.rnpush.Notification;
 import me.youchai.rnpush.PushService;
 import me.youchai.rnpush.utils.Logger;
-import me.youchai.rnpush.R;
 
 public class MiPushService extends PushService {
   private ReactApplicationContext _rac;
@@ -22,9 +26,17 @@ public class MiPushService extends PushService {
 
   @Override
   public void init() {
-    String appkey = _rac.getString(R.string.mipush_appkey);
-    String appid = _rac.getString(R.string.mipush_appid);
-    MiPushClient.registerPush(_rac, appkey, appid);
+    try {
+      ApplicationInfo ai = _rac.getPackageManager()
+          .getApplicationInfo(_rac.getPackageName(), PackageManager.GET_META_DATA);
+      Bundle bundle = ai.metaData;
+      String appid = bundle.getString("MIPUSH_APPID", null);
+      String appkey = bundle.getString("MIPUSH_APPKEY", null);
+      Logger.i(appid + " - " + appkey);
+      MiPushClient.registerPush(_rac, appkey, appid);
+    } catch (PackageManager.NameNotFoundException e) {
+      Logger.i("cannot read metadata");
+    }
   }
 
   @Override

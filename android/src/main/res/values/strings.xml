@@ -1,5 +1,0 @@
-<resources>
-  <string name="app_name">example</string>
-  <string name="mipush_appkey">mipushappkey</string>
-  <string name="mipush_appid">mipushappid</string>
-</resources>
