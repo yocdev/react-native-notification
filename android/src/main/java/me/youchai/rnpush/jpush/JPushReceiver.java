@@ -13,6 +13,9 @@ import me.youchai.rnpush.Notification;
 import me.youchai.rnpush.RNPushModule;
 import me.youchai.rnpush.utils.Logger;
 
+import org.json.JSONObject;
+import android.net.Uri;
+
 
 /**
  * 接收自定义消息,通知,通知点击事件等事件的广播
@@ -53,12 +56,20 @@ public class JPushReceiver extends BroadcastReceiver {
         String extras = bundle.getString(JPushInterface.EXTRA_EXTRA);
         Logger.d("notification click " + title);
 
-        // start MainActivity
         Intent intent = new Intent();
-        intent.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
-        intent.putExtras(bundle);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        context.startActivity(intent);
+        JSONObject jExtra = new JSONObject(extras);
+        if (jExtra.has("openUrl") && !jExtra.isNull("openUrl")) {
+          String url = jExtra.getString("openUrl");
+          Logger.i("openning url: " + url);
+          intent.setAction(Intent.ACTION_VIEW);
+          intent.setData(Uri.parse(url));
+          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          context.startActivity(intent);
+        } else {
+          intent.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
+          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+          context.startActivity(intent);
+        }
 
         RNPushModule.onNotificationClick(new Notification(
             id, title, content, extras

@@ -18,6 +18,7 @@ import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.WritableMap;
 
 import org.json.JSONObject;
+import android.net.Uri;
 
 import me.youchai.rnpush.Notification;
 import me.youchai.rnpush.RNPushModule;
@@ -44,13 +45,26 @@ public class MiPushReceiver extends PushMessageReceiver {
     String content = message.getDescription();
     Map<String, String> extrasMap = message.getExtra();
     String extras = new JSONObject(extrasMap).toString();
-    Logger.i(message.toString());
 
-    // start MainActivity
     Intent intent = new Intent();
-    intent.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-    context.startActivity(intent);
+    try {
+      JSONObject jExtra = new JSONObject(extras);
+      if (jExtra.has("openUrl") && !jExtra.isNull("openUrl")) {
+        String url = jExtra.getString("openUrl");
+        Logger.i("openning url: " + url);
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+      } else {
+        intent.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        context.startActivity(intent);
+      }
+    } catch (Exception e) {
+      e.printStackTrace();
+      Logger.i("error when click on notification");
+    }
 
     RNPushModule.onNotificationClick(new Notification(
         id, title, content, extras
