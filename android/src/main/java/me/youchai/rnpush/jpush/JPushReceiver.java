@@ -12,12 +12,7 @@ import android.app.NotificationChannel;
 import android.app.PendingIntent;
 import java.lang.System;
 
-import android.R;
-
-import android.support.v4.app.NotificationCompat;
-
-import com.facebook.react.bridge.Arguments;
-import com.facebook.react.bridge.WritableMap;
+import androidx.core.app.NotificationCompat;
 
 import cn.jpush.android.api.JPushInterface;
 import me.youchai.rnpush.RNPushModule;
