@@ -18,16 +18,17 @@ RCT_EXPORT_MODULE();
 
 
 
-RCT_REMAP_METHOD(getRegistrationId:(int)code,
+RCT_REMAP_METHOD(getRegistrationId,
+                 getRegistrationIdByCode:(int)code
                  resolver:(RCTPromiseResolveBlock)resolve
                  rejecter:(RCTPromiseRejectBlock)reject)
 {
     if(code>0){
-        resolve(@{@"code":code})
-        [self sendEventWithName:@"notification" body:@{@"code": code}];
+        resolve(@{@"code":[NSString stringWithFormat:@"%d",code]});
+        [self sendEventWithName:@"notification" body:@{@"code": [NSString stringWithFormat:@"%d",code]}];
     }else{
         NSError * err=[NSError errorWithDomain:@"test" code:0 userInfo:nil];
-        resolve(@"getRegistrationId",@"error",err)
+        reject(@"getRegistrationId",@"error",err);
     }
 }
 

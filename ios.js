@@ -1,7 +1,7 @@
 import {
   NativeModules,
   Platform,
-	NativeAppEventEmitter,
+	NativeEventEmitter,
 } from 'react-native'
 
 // import PushNotificationIOS from '@react-native-community/push-notification-ios'
@@ -12,7 +12,7 @@ const {RNCNotification} = NativeModules
 // PushNotificationIOS.addEventListener('register', (token) => {
 // 	registrationIdIOS = token
 // })
-const notificationEmitter = new NativeAppEventEmitter(RNCNotification)
+const notificationEmitter = new NativeEventEmitter(RNCNotification)
 
 const RNPush = {
   addEventListener: (event, handler) => {
