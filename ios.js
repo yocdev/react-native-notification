@@ -31,12 +31,12 @@ const RNPush = {
     //   PushNotificationIOS.addEventListener(event, handler)
     // }
   },
-  getRegistrationId: (code) => {
+  getRegistrationId: () => {
     // return Promise.resolve({
     //   type: 'Apple',
     //   registrationId: registrationIdIOS,
     // })
-    return RNCNotification.getRegistrationId(code)
+    return RNCNotification.getRegistrationId()
   },
   clearBadge: () => {
     // PushNotificationIOS.setApplicationIconBadgeNumber(0)
