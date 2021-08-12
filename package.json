@@ -1,6 +1,8 @@
 {
   "name": "react-native-notification",
   "version": "1.0.0",
+  "author": "npm@youchai.me",
+  "license": "MIT",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,8 +11,8 @@
   "keywords": [
     "react-native"
   ],
-  "author": "",
-  "license": "",
+ 
+  
   "peerDependencies": {
     "react-native": "^0.41.2"
   },
