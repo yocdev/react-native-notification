@@ -1,12 +1,12 @@
 import {
   NativeModules,
   Platform,
-	NativeEventEmitter,
+  NativeEventEmitter,
 } from 'react-native'
 
 // import PushNotificationIOS from '@react-native-community/push-notification-ios'
 
-const {RNCNotification} = NativeModules
+const { RNCNotification } = NativeModules
 
 // let registrationIdIOS = ''
 // PushNotificationIOS.addEventListener('register', (token) => {
@@ -16,10 +16,12 @@ const notificationEmitter = new NativeEventEmitter(RNCNotification)
 
 const RNPush = {
   addEventListener: (event, handler) => {
-    notificationEmitter.add(event,handler)
+    if (event === 'notification') {
+      notificationEmitter.addListener(event, handler)
+    }
     // if (event === 'register') {
     //   return PushNotificationIOS.addEventListener('register', (token) => {
-	  //     registrationIdIOS = token
+    //     registrationIdIOS = token
     //     handler({
     //       type: 'Apple',
     //       registrationId: token,
@@ -30,7 +32,7 @@ const RNPush = {
     // }
   },
   getRegistrationId: (code) => {
-		// return Promise.resolve({
+    // return Promise.resolve({
     //   type: 'Apple',
     //   registrationId: registrationIdIOS,
     // })
@@ -39,18 +41,18 @@ const RNPush = {
   clearBadge: () => {
     // PushNotificationIOS.setApplicationIconBadgeNumber(0)
   },
-	init: () => {
+  init: () => {
     // have to call this to get fresh registrationId
     // PushNotificationIOS.requestPermissions()
   },
-	stop: () => {},
-	resume: () => {},
-	removeAllNotifications: () => {
-		// PushNotificationIOS.removeAllDeliveredNotifications()
-	},
-	removeNotifications: (id) => {
-		// PushNotificationIOS.removeDeliveredNotifications(id)
-	}
+  stop: () => { },
+  resume: () => { },
+  removeAllNotifications: () => {
+    // PushNotificationIOS.removeAllDeliveredNotifications()
+  },
+  removeNotifications: (id) => {
+    // PushNotificationIOS.removeDeliveredNotifications(id)
+  }
 }
 
 export default RNPush
