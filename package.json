@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "author": "npm@youchai.me",
   "license": "MIT",
-  "description": "",
+  "description": "react-native notification",
+  "homepage": "https://github.com/yocdev/react-native-notification#readme",
+
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
