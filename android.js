@@ -1,7 +1,5 @@
 import {
   NativeModules,
-  Platform,
-  PushNotificationIOS,
 	NativeAppEventEmitter,
 } from 'react-native'
 

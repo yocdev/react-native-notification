@@ -6,14 +6,17 @@ import {
 
 // import PushNotificationIOS from '@react-native-community/push-notification-ios'
 
+const {RNCNotification} = NativeModules
 
-let registrationIdIOS = ''
+// let registrationIdIOS = ''
 // PushNotificationIOS.addEventListener('register', (token) => {
 // 	registrationIdIOS = token
 // })
+const notificationEmitter = new NativeAppEventEmitter(RNCNotification)
 
 const RNPush = {
   addEventListener: (event, handler) => {
+    notificationEmitter.add(event,handler)
     // if (event === 'register') {
     //   return PushNotificationIOS.addEventListener('register', (token) => {
 	  //     registrationIdIOS = token
@@ -26,11 +29,12 @@ const RNPush = {
     //   PushNotificationIOS.addEventListener(event, handler)
     // }
   },
-  getRegistrationId: () => {
+  getRegistrationId: (code) => {
 		// return Promise.resolve({
     //   type: 'Apple',
     //   registrationId: registrationIdIOS,
     // })
+    return RNCNotification.getRegistrationId(code)
   },
   clearBadge: () => {
     // PushNotificationIOS.setApplicationIconBadgeNumber(0)
