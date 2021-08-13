@@ -1,0 +1,21 @@
+PODS:
+  - JCore (2.7.1-noidfa)
+  - JPush (3.7.4):
+    - JCore (< 3.0.0, >= 2.0.0)
+
+DEPENDENCIES:
+  - JCore (= 2.7.1-noidfa)
+  - JPush (= 3.7.4)
+
+SPEC REPOS:
+  trunk:
+    - JCore
+    - JPush
+
+SPEC CHECKSUMS:
+  JCore: b7c28cfc056f83ab8fb0208ef50e3b91103bcdc5
+  JPush: e455ad2a7b854bca8149df085772d6c4f79b2416
+
+PODFILE CHECKSUM: 855ee4dae3be63730f74ebd27f878a338a32e89c
+
+COCOAPODS: 1.10.1
