@@ -85,13 +85,16 @@ static NSDictionary* remoteNotification = nil;
     NSString *body = [content valueForKey:@"body"];
     NSString *title = [content valueForKey:@"title"];
       // 取得 Extras 字段内容
-    NSString *customizeField1 = [userInfo valueForKey:@"customizeExtras"]; //服务端中 Extras 字段，key 是自己定义的
+    NSString *extras = [userInfo valueForKey:@"extras"]; //服务端中 Extras 字段，key 是自己定义的
+    if(!extras){
+        extras=@"";
+    }
     NSLog(@"JIGUANG willPresentNotification content:%@ badge:%d sound:%@ messageID:%@ extras:%@",
           content,
           badge,
           sound,
           messageID,
-          customizeField1);
+          extras);
     [self
      sendEventWithName:@"notification"
      body:@{
@@ -118,9 +121,11 @@ static NSDictionary* remoteNotification = nil;
     NSString *body = [content valueForKey:@"body"];
     NSString *title = [content valueForKey:@"title"];
     // 取得 Extras 字段内容
-    NSString *customizeField1 = [userInfo valueForKey:@"customizeExtras"]; //服务端中 Extras 字段，key 是自己定义的
-    
-  NSLog(@"JIGUANG didReceiveNotificationResponse  content:%@ messageID:%@ extras:%@",content,messageID,customizeField1);
+    NSString *extras = [userInfo valueForKey:@"extras"]; //服务端中 Extras 字段，key 是自己定义的
+    if(!extras){
+        extras=@"";
+    }
+  NSLog(@"JIGUANG didReceiveNotificationResponse  content:%@ messageID:%@ extras:%@",content,messageID,extras);
     [self
      sendEventWithName:@"openNotification"
      body:@{
@@ -128,6 +133,7 @@ static NSDictionary* remoteNotification = nil;
          @"title":title,
          @"body":body,
          @"badge":badge,
+         @"extras":extras,
      }];
   completionHandler();  // 系统要求执行这个方法
 }
@@ -172,11 +178,17 @@ RCT_REMAP_METHOD(init,
             NSNumber* badge = [aps valueForKey:@"badge"] ;
             NSString *body = [content valueForKey:@"body"];
             NSString *title = [content valueForKey:@"title"];
+            NSString *extras = [remoteNotification valueForKey:@"extras"]; //服务端中 Extras 字段，key 是自己定义的
+            if(!extras){
+                extras=@"";
+            }
+            
             [self sendEventWithName:@"openNotification" body:@{
                 @"messageID":messageID,
                 @"title":title,
                 @"body":body,
                 @"badge":badge,
+                @"extras":extras,
             }];
         }
         
