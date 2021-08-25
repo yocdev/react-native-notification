@@ -22,6 +22,7 @@
 @implementation RNCNotification
 
 RCT_EXPORT_MODULE();
+static NSString*JPUSH_IOS=@"JPUSH_IOS";
 static NSDictionary* remoteNotification = nil;
 + (void)registerDeviceToken:(NSData *)deviceToken{
     [JPUSHService registerDeviceToken:deviceToken];
@@ -167,7 +168,7 @@ RCT_REMAP_METHOD(init,
             str = self.registrationID;
         }
         [self sendEventWithName:@"register" body:@{
-            @"type":@"ios",
+            @"type":JPUSH_IOS,
             @"registrationID":str,
 //            @"notification":[NSString stringWithFormat:@"%@",remoteNotification]
         }];
@@ -209,7 +210,7 @@ RCT_REMAP_METHOD(getRegistrationId,
     if(self.registrationID!= nil){
         str = self.registrationID;
     }
-    resolve(@{@"type":@"ios",@"registrationID":str});
+    resolve(@{@"type":JPUSH_IOS,@"registrationID":str});
 }
 
 RCT_REMAP_METHOD(removeAllNotifications,

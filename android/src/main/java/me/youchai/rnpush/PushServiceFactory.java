@@ -18,7 +18,7 @@ import me.youchai.rnpush.utils.RomUtils;
 class PushServiceFactory {
   private static final String MIPUSH = "MiPush";
   private static final String HUAWEI = "Huawei";
-  private static final String JPUSH = "JPush";
+  private static final String JPUSH = "JPush_Android";
 
   private static final Map<String, Class<? extends PushService>> allServices =
       Collections.unmodifiableMap(new HashMap() {{
