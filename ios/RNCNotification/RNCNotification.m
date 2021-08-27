@@ -16,7 +16,7 @@
 #endif
 
 @interface RNCNotification()<JPUSHRegisterDelegate>
-@property (nonatomic,strong) NSString*registrationID;
+@property (nonatomic,strong) NSString*registrationId;
 @end
 
 @implementation RNCNotification
@@ -160,16 +160,16 @@ RCT_REMAP_METHOD(init,
     
   //  [self voipRegistration];
     
-    [JPUSHService registrationIDCompletionHandler:^(int resCode, NSString *registrationID) {
-        NSLog(@"resCode : %d,registrationID: %@",resCode,registrationID);
-        self.registrationID = [registrationID copy];
+    [JPUSHService registrationIDCompletionHandler:^(int resCode, NSString *registrationId) {
+        NSLog(@"resCode : %d,registrationId: %@",resCode,registrationId);
+        self.registrationId = [registrationId copy];
         NSString*str=@"";
-        if(self.registrationID!= nil){
-            str = self.registrationID;
+        if(self.registrationId!= nil){
+            str = self.registrationId;
         }
         [self sendEventWithName:@"register" body:@{
             @"type":JPUSH_IOS,
-            @"registrationID":str,
+            @"registrationId":str,
 //            @"notification":[NSString stringWithFormat:@"%@",remoteNotification]
         }];
         if(remoteNotification!=nil){
@@ -207,10 +207,10 @@ RCT_REMAP_METHOD(getRegistrationId,
 {
     NSLog(@"getRegistrationId");
     NSString*str=@"";
-    if(self.registrationID!= nil){
-        str = self.registrationID;
+    if(self.registrationId!= nil){
+        str = self.registrationId;
     }
-    resolve(@{@"type":JPUSH_IOS,@"registrationID":str});
+    resolve(@{@"type":JPUSH_IOS,@"registrationId":str});
 }
 
 RCT_REMAP_METHOD(removeAllNotifications,
@@ -220,7 +220,7 @@ RCT_REMAP_METHOD(removeAllNotifications,
     NSLog(@"removeAllNotifications");
     [JPUSHService removeNotification:nil];
     resolve(@{});
-//    resolve(@{@"type":@"ios",@"registrationID":self.registrationID});
+//    resolve(@{@"type":@"ios",@"registrationId":self.registrationId});
 }
 
 RCT_REMAP_METHOD(setBadge,
@@ -231,7 +231,7 @@ RCT_REMAP_METHOD(setBadge,
     NSLog(@"setBadge");
     [JPUSHService setBadge:value];
     resolve(@{});
-//    resolve(@{@"type":@"ios",@"registrationID":self.registrationID});
+//    resolve(@{@"type":@"ios",@"registrationId":self.registrationId});
 }
 
 

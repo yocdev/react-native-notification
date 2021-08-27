@@ -29,7 +29,7 @@ public class JPushService extends PushService {
   }
 
   public String getName() {
-    return "JPush";
+    return "JPUSH_Android";
   }
 
   public String getRegistrationId() {

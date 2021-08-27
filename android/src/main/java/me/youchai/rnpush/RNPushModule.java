@@ -1,5 +1,7 @@
 package me.youchai.rnpush;
 
+import android.util.Log;
+
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -50,11 +52,14 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   }
 
   public static void onNotification(Notification note) {
+    Log.d(TAG,"onNotification");
     RNPushModule.sendEvent("notification", note.toWritableMap());
   }
 
   public static void onNotificationClick(Notification note) {
-    PushService.setInitialNotification(note);
+    Log.d(TAG,"onNotificationClick");
+//    PushService.setInitialNotification(note);
+    RNPushModule.sendEvent("openNotification", note.toWritableMap());
   }
 
   public static void sendEvent(String key, WritableMap event) {
