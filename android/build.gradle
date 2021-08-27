@@ -39,5 +39,8 @@ dependencies {
 //    compile 'com.huawei.android.hms:push:2.5.3.302'
     compile 'cn.jiguang.sdk:jcore:2.9.0'
     compile 'cn.jiguang.sdk:jpush:4.3.0'
+
+    compile 'cn.jiguang.sdk.plugin:xiaomi:4.3.0'
+
     compile 'com.facebook.react:react-native:+'
 }

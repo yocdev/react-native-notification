@@ -1,10 +1,14 @@
 package me.youchai.rnpush.jpush;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
 import org.json.JSONObject;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.jpush.android.api.CmdMessage;
 import cn.jpush.android.api.CustomMessage;
@@ -16,6 +20,44 @@ import me.youchai.rnpush.RNPushModule;
 
 public class JPushReceiver extends JPushMessageReceiver {
   private static final String TAG = "JPushReceiver";
+
+  /**消息Id**/
+  private static final String KEY_MSGID = "msg_id";
+  /**该通知的下发通道**/
+  private static final String KEY_WHICH_PUSH_SDK = "rom_type";
+  /**通知标题**/
+  private static final String KEY_TITLE = "n_title";
+  /**通知内容**/
+  private static final String KEY_CONTENT = "n_content";
+  /**通知附加字段**/
+  private static final String KEY_EXTRAS = "n_extras";
+
+  private static Notification firmNotification = null;
+
+  public static void openFirmNotification(Activity activity){
+    try {
+      Intent intent = activity.getIntent();
+      String data = intent.getExtras().getString("JMessageExtra");
+      JSONObject json = new JSONObject(data);
+
+      String extras = json.getJSONObject(KEY_EXTRAS).getString("extras");
+      Log.d(TAG, "extras:"+extras);
+
+      String msgId = json.optString(KEY_MSGID);
+      String title = json.optString(KEY_TITLE);
+      String content = json.optString(KEY_CONTENT);
+      firmNotification = new Notification(
+            msgId,
+            title,
+            content,
+            extras
+          );
+
+
+    }catch(Exception e){
+      Log.e(TAG,"getIntent()",e);
+    }
+  }
 
   @Override
   public void onMessage(Context context, CustomMessage customMessage) {
@@ -86,17 +128,55 @@ public class JPushReceiver extends JPushMessageReceiver {
     RNPushModule.onRegister("JPUSH_Android", s);
   }
 
+  void processFirmMessage(CmdMessage cmdMsg){
+    if(cmdMsg.extra==null)return;
+    String token = cmdMsg.extra.getString("token");
+    int platform = cmdMsg.extra.getInt("platform");
+    String deviceName = "unkown";
+    switch (platform){
+      case 1:
+        deviceName = "小米";
+        break;
+      case 2:
+        deviceName = "华为";
+        break;
+      case 3:
+        deviceName = "魅族";
+        break;
+      case 4:
+        deviceName = "OPPO";
+        break;
+      case 5:
+        deviceName = "VIVO";
+        break;
+      case 6:
+        deviceName = "ASUS";
+        break;
+      case 8:
+        deviceName = "FCM";
+        break;
+    }
+    Log.d(TAG,"获取到 "+deviceName+" 的token:"+token);
+  }
+
   @Override
   public void onCommandResult(Context context, CmdMessage cmdMessage) {
     Log.i(TAG,"onCommandResult:"+cmdMessage);
 //    super.onCommandResult(context, cmdMessage);
-
+    if(cmdMessage == null )return ;
     switch(cmdMessage.cmd) {
+      case 1000:
+        processFirmMessage(cmdMessage);
+        break;
+
       case 2005:
         if(!cmdMessage.msg.isEmpty()){
           RNPushModule.onRegister("JPUSH_Android", cmdMessage.msg);
         }
-
+        if(firmNotification != null){
+          RNPushModule.onNotificationClick(firmNotification);
+          firmNotification = null;
+        }
         break;
     }
   }
