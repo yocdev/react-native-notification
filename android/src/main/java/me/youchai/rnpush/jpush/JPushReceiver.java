@@ -7,9 +7,6 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import cn.jpush.android.api.CmdMessage;
 import cn.jpush.android.api.CustomMessage;
 import cn.jpush.android.api.JPushMessage;
@@ -37,7 +34,17 @@ public class JPushReceiver extends JPushMessageReceiver {
   public static void openFirmNotification(Activity activity){
     try {
       Intent intent = activity.getIntent();
-      String data = intent.getExtras().getString("JMessageExtra");
+
+      String data = null;
+      //获取华为平台附带的jpush信息
+      if (intent.getData() != null) {
+        data = intent.getData().toString();
+      }
+
+      //获取fcm、oppo、vivo、华硕、小米平台附带的jpush信息
+      if (data == null && intent.getExtras() != null) {
+        data = intent.getExtras().getString("JMessageExtra");
+      }
       JSONObject json = new JSONObject(data);
 
       String extras = json.getJSONObject(KEY_EXTRAS).getString("extras");
@@ -52,7 +59,6 @@ public class JPushReceiver extends JPushMessageReceiver {
             content,
             extras
           );
-
 
     }catch(Exception e){
       Log.e(TAG,"getIntent()",e);
