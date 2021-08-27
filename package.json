@@ -1,11 +1,10 @@
 {
   "name": "@yocdev/react-native-notification",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "author": "npm@youchai.me",
   "license": "MIT",
   "description": "react-native notification",
   "homepage": "https://github.com/yocdev/react-native-notification#readme",
-
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,8 +12,6 @@
   "keywords": [
     "react-native"
   ],
- 
-  
   "peerDependencies": {
     "react-native": "^0.41.2"
   },
