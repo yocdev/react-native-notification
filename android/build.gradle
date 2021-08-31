@@ -7,7 +7,7 @@ buildscript {
 
   dependencies {
     classpath 'com.android.tools.build:gradle:3.4.0'
-    classpath 'com.huawei.agconnect:agcp:1.4.2.300'
+    classpath 'com.huawei.agconnect:agcp:1.5.2.300'
   }
 }
 
@@ -43,7 +43,9 @@ dependencies {
 
   compile 'cn.jiguang.sdk.plugin:xiaomi:4.3.0'
 
-  compile 'com.huawei.hms:push:5.3.0.301'
+  compile 'com.huawei.hms:push:5.3.0.304'
+  compile 'com.huawei.agconnect:agconnect-core:1.5.2.300'
+
   compile 'cn.jiguang.sdk.plugin:huawei:4.3.0'
 
   compile 'cn.jiguang.sdk.plugin:oppo:4.3.0'
@@ -52,5 +54,6 @@ dependencies {
 
   compile 'com.facebook.react:react-native:+'
 }
-apply plugin: 'com.huawei.agconnect'
+
+
 
