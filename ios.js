@@ -10,20 +10,18 @@ const notificationEmitter = new NativeEventEmitter(RNCNotification)
 
 const RNPush = {
   addEventListener: (event, handler) => {
-      notificationEmitter.addListener(event, handler)
+    notificationEmitter.addListener(event, handler)
   },
-  removeEventListener:(event,listener)=>{
-    notificationEmitter.removeEventListener(event,listener)
+  removeEventListener: (event, listener) => {
+    notificationEmitter.removeEventListener(event, listener)
   },
   getRegistrationId: () => {
-    console.info('[RNCNotification] getRegistrationId')
     return RNCNotification.getRegistrationId()
   },
   clearBadge: () => {
     RNCNotification.setBadge(0)
   },
   init: () => {
-    console.info('[RNCNotification] init')
     return RNCNotification.init()
   },
   stop: () => { },
@@ -32,6 +30,14 @@ const RNPush = {
     RNCNotification.removeAllNotifications()
   },
   removeNotifications: (id) => {
+  },
+
+  requestNotification: async () => {
+    return await RNCNotification.requestNotification()
+  },
+
+  openSettingsForNotification: async () => {
+    return await RNCNotification.openSettingsForNotification()
   }
 }
 

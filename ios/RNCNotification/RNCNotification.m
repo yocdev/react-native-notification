@@ -41,6 +41,7 @@ static NSDictionary* remoteNotification = nil;
 {
   return @[
       @"register",
+      @"notificationAuthorization",
       @"notification",
       @"openNotification",
   ];
@@ -141,6 +142,9 @@ static NSDictionary* remoteNotification = nil;
 
 - (void)jpushNotificationAuthorization:(JPAuthorizationStatus)status withInfo:(NSDictionary *)info{
   NSLog(@"JIGUANG receive notification authorization status:%lu, info:%@", status, info);
+    [self
+     sendEventWithName:@"notificationAuthorization"
+     body:[NSNumber numberWithUnsignedInteger:status]];
 }
 
 RCT_REMAP_METHOD(init,
@@ -234,6 +238,24 @@ RCT_REMAP_METHOD(setBadge,
 //    resolve(@{@"type":@"ios",@"registrationId":self.registrationId});
 }
 
+RCT_REMAP_METHOD(requestNotification,
+                  requestNotificationWithResolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSLog(@"requestNotification");
+    [JPUSHService requestNotificationAuthorization:^(JPAuthorizationStatus status) {
+        resolve([NSNumber numberWithUnsignedInteger:status]);
+    }];
+}
 
+RCT_REMAP_METHOD(openSettingsForNotification,
+                  openSettinsForNotificationWithResolver:(RCTPromiseResolveBlock)resolve
+                  rejecter:(RCTPromiseRejectBlock)reject)
+{
+    NSLog(@"openSettingsForNotification");
+    [JPUSHService openSettingsForNotification:^(BOOL success) {
+        resolve([NSNumber numberWithBool:success]);
+    }];
+}
 
 @end

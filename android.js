@@ -1,6 +1,6 @@
 import {
   NativeModules,
-	NativeAppEventEmitter,
+  NativeAppEventEmitter,
 } from 'react-native'
 
 const { RNPush } = NativeModules
@@ -10,13 +10,15 @@ const RNPushAndroid = {
   addEventListener: function (event, listener) {
     return NativeAppEventEmitter.addListener(event, listener)
   },
-  removeEventListener: function(event, listener) {
+  removeEventListener: function (event, listener) {
     return NativeAppEventEmitter.removeListener(event, listener)
   },
-  getNotifications: () => {},
-  setBadgeNumber: () => {},
+  getNotifications: () => { },
+  setBadgeNumber: () => { },
   getBadgeNumber: () => 0,
-  clearBadge: () => {},
+  clearBadge: () => { },
+  requestNotification: () => { },
+  openSettingsForNotification: () => { },
 }
 
 export default RNPushAndroid

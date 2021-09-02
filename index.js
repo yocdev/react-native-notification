@@ -5,6 +5,7 @@ import RNPushIOS from './ios'
 
 const EVENTS = [
   'notification',
+  'notificationAuthorization',
   'openNotification',
   'localNotification',
   'register',
