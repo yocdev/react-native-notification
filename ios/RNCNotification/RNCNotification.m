@@ -104,6 +104,7 @@ static NSDictionary* remoteNotification = nil;
          @"title":title,
          @"body":body,
          @"badge":badge,
+         @"extras":extras,
      }];
 }
 

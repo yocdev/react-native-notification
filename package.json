@@ -1,6 +1,6 @@
 {
   "name": "@yocdev/react-native-notification",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "author": "npm@youchai.me",
   "license": "MIT",
   "description": "react-native notification",
