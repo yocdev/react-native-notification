@@ -18,7 +18,10 @@ const RNPushAndroid = {
   getBadgeNumber: () => 0,
   clearBadge: () => { },
   requestNotification: () => { },
-  openSettingsForNotification: () => { },
+  checkPermission: async () => {
+    return RNPush.checkPermission()
+  },
+  openSettingsForNotification: async () => { return RNPush.openSettingsForNotification() },
 }
 
 export default RNPushAndroid

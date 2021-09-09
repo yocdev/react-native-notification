@@ -1,6 +1,5 @@
 import {
   NativeModules,
-  Platform,
   NativeEventEmitter,
 } from 'react-native'
 
@@ -31,13 +30,15 @@ const RNPush = {
   },
   removeNotifications: (id) => {
   },
-
   requestNotification: async () => {
-    return await RNCNotification.requestNotification()
+    return RNCNotification.requestNotification()
   },
-
+  checkPromission: async () => {
+    const state = await RNCNotification.requestNotification()
+    return state > 1
+  },
   openSettingsForNotification: async () => {
-    return await RNCNotification.openSettingsForNotification()
+    return RNCNotification.openSettingsForNotification()
   }
 }
 

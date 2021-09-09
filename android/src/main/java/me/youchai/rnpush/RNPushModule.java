@@ -1,6 +1,13 @@
 package me.youchai.rnpush;
 
+import android.app.NotificationManager;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.util.Log;
+
+import androidx.core.app.NotificationManagerCompat;
 
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -21,9 +28,24 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   private PushService pushService = null;
   private static ReactApplicationContext __rac;
 
+  enum EventType{
+    REGISTER("register"),
+    REGISTER_ERROR("registrationError"),
+    NOTIFICATION("notification"),
+    OPEN_NOTIFICATION("openNotification"),
+    NOTIFICATION_AUTHORIZATION("notificationAuthorization");
+
+    public String value;
+    private EventType(String value){
+      this.value = value;
+    }
+  }
+
   public RNPushModule(ReactApplicationContext reactContext) {
     super(reactContext);
     __rac = reactContext;
+
+
   }
 
   @Override
@@ -41,25 +63,33 @@ public class RNPushModule extends ReactContextBaseJavaModule {
     map.putString("type", type);
     map.putString("registrationId", registrationId);
 
-    RNPushModule.sendEvent("register", map);
+    RNPushModule.sendEvent(EventType.REGISTER.value, map);
   }
 
   public static void onRegisterError(String message) {
     WritableMap map = Arguments.createMap();
     map.putString("message", message);
 
-    RNPushModule.sendEvent("registrationError", map);
+    RNPushModule.sendEvent(EventType.REGISTER_ERROR.value, map);
   }
 
   public static void onNotification(Notification note) {
     Log.d(TAG,"onNotification");
-    RNPushModule.sendEvent("notification", note.toWritableMap());
+    RNPushModule.sendEvent(EventType.NOTIFICATION.value, note.toWritableMap());
   }
 
   public static void onNotificationClick(Notification note) {
     Log.d(TAG,"onNotificationClick");
 //    PushService.setInitialNotification(note);
-    RNPushModule.sendEvent("openNotification", note.toWritableMap());
+    RNPushModule.sendEvent(EventType.OPEN_NOTIFICATION.value, note.toWritableMap());
+  }
+
+  public static void onNotificationAuthorization(ReactApplicationContext reactContext){
+    Log.d(TAG,"onNotificationAuthorization");
+    boolean isOn = NotificationManagerCompat.from(reactContext).areNotificationsEnabled();
+    WritableMap map = Arguments.createMap();
+    map.putBoolean("state",isOn);
+    RNPushModule.sendEvent(EventType.NOTIFICATION_AUTHORIZATION.value,map);
   }
 
   public static void sendEvent(String key, WritableMap event) {
@@ -81,6 +111,7 @@ public class RNPushModule extends ReactContextBaseJavaModule {
     try {
       this.pushService = PushServiceFactory.create(__rac, config);
       this.pushService.init();
+      RNPushModule.onNotificationAuthorization(__rac);
       Logger.i("init Success!");
       promise.resolve(null);
     } catch (Throwable e) {
@@ -218,5 +249,40 @@ public class RNPushModule extends ReactContextBaseJavaModule {
       e.printStackTrace();
       promise.reject(e);
     }
+  }
+
+  @ReactMethod
+  public void checkPermission(Promise promise){
+    boolean state =  NotificationManagerCompat.from(__rac).areNotificationsEnabled();
+    promise.resolve(state);
+  }
+
+  @ReactMethod
+  public void openSettingsForNotification(Promise promise){
+    Intent intent = new Intent();
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    String packageName = __rac.getPackageName();
+    int uid = __rac.getApplicationInfo().uid;
+    try{
+      if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        intent.putExtra(Settings.EXTRA_APP_PACKAGE,packageName);
+        intent.putExtra(Settings.EXTRA_CHANNEL_ID,uid);
+      } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+        intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+        intent.putExtra("app_package",packageName);
+        intent.putExtra("app_uid",uid);
+      }
+
+      __rac.startActivity(intent);
+    }catch (Exception e){
+      Log.e(TAG,"gotoNotificationSetting",e);
+
+      intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+      intent.setData(Uri.fromParts("package",packageName,null));
+
+      __rac.startActivity(intent);
+    }
+    promise.resolve(true);
   }
 }
