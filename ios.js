@@ -37,6 +37,9 @@ const RNPush = {
     const state = await RNCNotification.requestNotification()
     return state > 1
   },
+  checkNetwork:async()=>{
+    return false
+  },
   openSettingsForNotification: async () => {
     return RNCNotification.openSettingsForNotification()
   }

@@ -21,6 +21,9 @@ const RNPushAndroid = {
   checkPermission: async () => {
     return RNPush.checkPermission()
   },
+  checkNetwork:async()=>{
+    return RNPush.checkNetwork()
+  },
   openSettingsForNotification: async () => { return RNPush.openSettingsForNotification() },
 }
 
