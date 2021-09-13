@@ -42,10 +42,10 @@ public class JPushReceiver extends JPushMessageReceiver {
 
   private static Notification firmNotification = null;
 
-  public static void openFirmNotification(Activity activity) {
+  public static void openFirmNotification(Activity activity,Intent intent) {
     Log.i(TAG, "openFirmNotification");
     try {
-      Intent intent = activity.getIntent();
+//      Intent intent = activity.getIntent();
 
       String data = null;
       //获取华为平台附带的jpush信息
@@ -72,6 +72,7 @@ public class JPushReceiver extends JPushMessageReceiver {
         content,
         extras
       );
+      RNPushModule.onNotificationClick(firmNotification);
       JPushInterface.reportNotificationOpened(activity, msgId, whichPushSDK);
     } catch (Exception e) {
       Log.e(TAG, "getIntent()", e);
@@ -89,7 +90,9 @@ public class JPushReceiver extends JPushMessageReceiver {
     Log.i(TAG, "onNotifyMessageOpened:" + msg);
     Intent intent = new Intent();
     intent.setClassName(context.getPackageName(), context.getPackageName() + ".MainActivity");
-    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+    intent.setFlags(
+      Intent.FLAG_ACTIVITY_NEW_TASK |
+        Intent.FLAG_ACTIVITY_CLEAR_TOP);
     context.startActivity(intent);
 
     String extras = "";
