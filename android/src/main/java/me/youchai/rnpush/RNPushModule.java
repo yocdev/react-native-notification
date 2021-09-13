@@ -1,5 +1,7 @@
 package me.youchai.rnpush;
 
+import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
@@ -21,7 +23,10 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import me.youchai.rnpush.utils.Logger;
 
@@ -104,6 +109,31 @@ public class RNPushModule extends ReactContextBaseJavaModule {
     }
   }
 
+  private void createNotificationChannel() {
+    // Create the NotificationChannel, but only on API 26+ because
+    // the NotificationChannel class is new and not in the support library
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//      String description = getString(R.string.channel_description);
+      int importance = NotificationManager.IMPORTANCE_DEFAULT;
+      NotificationChannelGroup customerGroup = new NotificationChannelGroup("TODO", "企业给员工的任务");
+      NotificationChannelGroup todoGroup = new NotificationChannelGroup("Customer Dynamics", "客户动态");
+
+      NotificationChannel customerChannel = new NotificationChannel("Customer Dynamics", "客户动态通知", importance);
+      customerChannel.setGroup(customerGroup.getId());
+      NotificationChannel hignChannel = new NotificationChannel("high_system", "服务提醒", importance);
+      hignChannel.setGroup(customerGroup.getId());
+      NotificationChannel todoChannel = new NotificationChannel("TODO", "企业给员工的任务", importance);
+      todoChannel.setGroup(todoGroup.getId());
+      //      channel.setDescription(description);
+      // Register the channel with the system; you can't change the importance
+      // or other notification behaviors after this
+      NotificationManager notificationManager = __rac.getSystemService(NotificationManager.class);
+      notificationManager.createNotificationChannelGroups(Arrays.asList(customerGroup, todoGroup));
+      notificationManager.createNotificationChannels(Arrays.asList(customerChannel, hignChannel,todoChannel));
+
+    }
+  }
+
   @ReactMethod
   public void init(ReadableMap configs, Promise promise) {
     ReadableMap config = null;
@@ -114,9 +144,14 @@ public class RNPushModule extends ReactContextBaseJavaModule {
       this.pushService = PushServiceFactory.create(__rac, config);
       this.pushService.init();
       RNPushModule.onNotificationAuthorization(__rac);
+
       Logger.i("init Success!");
       promise.resolve(null);
+      
+      createNotificationChannel();
+
     } catch (Throwable e) {
+      e.printStackTrace();
       Logger.i("error when init push service" + e.getMessage());
       promise.reject(e);
     }
