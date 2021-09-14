@@ -89,7 +89,7 @@ public class JPushReceiver extends JPushMessageReceiver {
   public void onNotifyMessageOpened(Context context, NotificationMessage msg) {
     Log.i(TAG, "onNotifyMessageOpened:" + msg);
     Intent intent = new Intent();
-    intent.setClassName(context.getPackageName(), context.getPackageName() + "me.youchai.bmb.MainActivity");
+    intent.setClassName(context.getPackageName(), "me.youchai.bmb.MainActivity");
     intent.setFlags(
       Intent.FLAG_ACTIVITY_NEW_TASK |
         Intent.FLAG_ACTIVITY_CLEAR_TOP);
