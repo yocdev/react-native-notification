@@ -16,7 +16,7 @@
     "react-native": "^0.41.2"
   },
   "devDependencies": {
-    "eslint": "^3.19.0"
+    "eslint": "^8.31.0"
   },
   "dependencies": {}
 }
