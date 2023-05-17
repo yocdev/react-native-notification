@@ -20,10 +20,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.ReadableMapKeySetIterator;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.RCTNativeAppEventEmitter;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -109,31 +111,6 @@ public class RNPushModule extends ReactContextBaseJavaModule {
     }
   }
 
-  private void createNotificationChannel() {
-    // Create the NotificationChannel, but only on API 26+ because
-    // the NotificationChannel class is new and not in the support library
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//      String description = getString(R.string.channel_description);
-      int importance = NotificationManager.IMPORTANCE_DEFAULT;
-      NotificationChannelGroup customerGroup = new NotificationChannelGroup("TODO", "企业给员工的任务");
-      NotificationChannelGroup todoGroup = new NotificationChannelGroup("Customer Dynamics", "客户动态");
-
-      NotificationChannel customerChannel = new NotificationChannel("Customer Dynamics", "客户动态通知", importance);
-      customerChannel.setGroup(customerGroup.getId());
-      NotificationChannel hignChannel = new NotificationChannel("high_system", "服务提醒", importance);
-      hignChannel.setGroup(customerGroup.getId());
-      NotificationChannel todoChannel = new NotificationChannel("TODO", "企业给员工的任务", importance);
-      todoChannel.setGroup(todoGroup.getId());
-      //      channel.setDescription(description);
-      // Register the channel with the system; you can't change the importance
-      // or other notification behaviors after this
-      NotificationManager notificationManager = __rac.getSystemService(NotificationManager.class);
-      notificationManager.createNotificationChannelGroups(Arrays.asList(customerGroup, todoGroup));
-      notificationManager.createNotificationChannels(Arrays.asList(customerChannel, hignChannel,todoChannel));
-
-    }
-  }
-
   @ReactMethod
   public void init(ReadableMap configs, Promise promise) {
     ReadableMap config = null;
@@ -148,7 +125,7 @@ public class RNPushModule extends ReactContextBaseJavaModule {
       Logger.i("init Success!");
       promise.resolve(null);
       
-      createNotificationChannel();
+      //createNotificationChannel();
 
     } catch (Throwable e) {
       e.printStackTrace();
@@ -292,6 +269,66 @@ public class RNPushModule extends ReactContextBaseJavaModule {
   public void checkPermission(Promise promise) {
     boolean state = NotificationManagerCompat.from(__rac).areNotificationsEnabled();
     promise.resolve(state);
+  }
+
+  /**
+   * config:{
+   *   [groupId]:{
+   *     name,
+   *     channelDic:{
+   *       [channelId]:{
+   *         name,
+   *         importance,
+   *       }
+   *     }
+   *   }
+   * }
+   * @param config
+   * @param promise
+   */
+  @ReactMethod
+  public void createNotificationChannels(ReadableMap config, Promise promise){
+    try{
+      if(config == null){
+        promise.resolve(null);
+        return;
+      }
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+  //      String description = getString(R.string.channel_description);
+//        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+        ReadableMapKeySetIterator iterator = config.keySetIterator();
+        ArrayList groups = new ArrayList<NotificationChannelGroup>();
+        ArrayList channels = new ArrayList<NotificationChannel>();
+        while(iterator.hasNextKey()){
+          String groupId = iterator.nextKey();
+          ReadableMap groupConfig = config.getMap(groupId);
+          String groupName = groupConfig.getString("name");
+          ReadableMap channelDic = groupConfig.getMap("channelDic");
+          NotificationChannelGroup group = new NotificationChannelGroup(groupId,groupName);
+          ReadableMapKeySetIterator cIt = channelDic.keySetIterator();
+          groups.add(group);
+          while(cIt.hasNextKey()){
+            String channelId = cIt.nextKey();
+            ReadableMap channelConfig = channelDic.getMap(channelId);
+            String channelName = channelConfig.getString("name");
+            int importance = channelConfig.getInt("importance");
+            NotificationChannel channel = new NotificationChannel(channelId,channelName,importance);
+            channel.setGroup(group.getId());
+            channels.add(channel);
+          }
+        }
+
+        // Register the channel with the system; you can't change the importance
+        // or other notification behaviors after this
+        NotificationManager notificationManager = __rac.getSystemService(NotificationManager.class);
+        notificationManager.createNotificationChannelGroups(groups);
+        notificationManager.createNotificationChannels(channels);
+      }
+      promise.resolve(null);
+  }catch(Throwable e){
+    e.printStackTrace();
+    promise.reject(e);
+  }
   }
 
   @ReactMethod

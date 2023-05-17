@@ -1,23 +1,23 @@
 buildscript {
   repositories {
+    gradlePluginPortal()
     google()
     jcenter()
-    maven {url 'http://developer.huawei.com/repo/'}
+    mavenCentral()
+    maven { url 'https://developer.huawei.com/repo/'}
   }
 
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.4.0'
-    classpath 'com.huawei.agconnect:agcp:1.5.2.300'
+    classpath 'com.android.tools.build:gradle:7.4.0'
+    classpath 'com.huawei.agconnect:agcp:1.6.0.300'
   }
 }
 
 apply plugin: 'com.android.library'
 
 android {
-
   compileSdkVersion 28
   buildToolsVersion "28.0.3"
-
   defaultConfig {
     minSdkVersion 17
     targetSdkVersion 28
@@ -31,29 +31,27 @@ android {
 
 repositories {
   google()
-  maven { url 'http://developer.huawei.com/repo/' }
+  maven {url 'https://developer.huawei.com/repo/'}
   mavenCentral()
 }
 
 dependencies {
-  compile fileTree(dir: "libs", include: ["*.jar"])
+  implementation fileTree(dir: "libs", include: ["*.jar"])
 
-  compile 'cn.jiguang.sdk:jcore:2.9.0'
-  compile 'cn.jiguang.sdk:jpush:4.3.0'
+  implementation 'cn.jiguang.sdk:jpush:5.0.3'
 
-  compile 'cn.jiguang.sdk.plugin:xiaomi:4.3.0'
+  implementation 'cn.jiguang.sdk.plugin:xiaomi:5.0.3'
 
-  compile 'com.huawei.hms:push:5.3.0.304'
-  compile 'com.huawei.agconnect:agconnect-core:1.5.2.300'
+  implementation 'com.huawei.hms:push:6.10.0.300'
+  implementation 'cn.jiguang.sdk.plugin:huawei:5.0.3'
 
-  compile 'cn.jiguang.sdk.plugin:huawei:4.3.0'
 
-  compile 'cn.jiguang.sdk.plugin:oppo:4.3.0'
+  implementation 'cn.jiguang.sdk.plugin:oppo:5.0.3'
 
-  compile 'cn.jiguang.sdk.plugin:vivo:4.3.0'
+  implementation 'cn.jiguang.sdk.plugin:vivo:5.0.3'
 
-  compile 'com.facebook.react:react-native:+'
+  implementation 'com.facebook.react:react-native:+'
 }
 
-
+apply plugin: 'com.huawei.agconnect'
 

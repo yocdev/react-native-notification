@@ -65,7 +65,6 @@ public class Notification {
     map.putString("title", title);
     map.putString("content", content);
     map.putString("extras", extras);
-
     return map;
   }
 }
