@@ -27,12 +27,17 @@ android {
   lintOptions {
     abortOnError false
   }
+
 }
 
 repositories {
   google()
   maven {url 'https://developer.huawei.com/repo/'}
   mavenCentral()
+
+  flatDir {
+    dirs 'libs'
+  }
 }
 
 dependencies {
@@ -45,6 +50,8 @@ dependencies {
   implementation 'com.huawei.hms:push:6.10.0.300'
   implementation 'cn.jiguang.sdk.plugin:huawei:5.0.3'
 
+  implementation 'cn.jiguang.sdk.plugin:honor:5.0.3'
+  implementation(name: 'HiPushSdk-7.0.41.301', ext: 'aar')
 
   implementation 'cn.jiguang.sdk.plugin:oppo:5.0.3'
 
